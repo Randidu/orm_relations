@@ -1,0 +1,14 @@
+fastapi~=0.129.0
+uvicorn
+sqlalchemy~=2.0.46
+asyncpg
+pydantic~=2.12.5
+python-dotenv~=1.2.1
+langchain~=1.2.10
+langchain-openai~=1.1.9
+langchain-community~=0.4.1
+langgraph~=1.0.8
+psycopg2
+greenlet
+starlette~=0.52.1
+gradio
