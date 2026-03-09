@@ -24,7 +24,7 @@ class Teacher(Base):
         cascade="all, delete-orphan"
     )
 
-class Teacher_Profiles(Base):
+class TeacherProfile(Base):
     __tablename__ = "teacher_profiles"
 
     id:Mapped[int] = mapped_column(primary_key=True, index=True)
