@@ -1,15 +1,11 @@
-import email
-import profile
 from datetime import datetime
-from typing import Optional
-
+from typing import Optional, List
 from pydantic import Field, BaseModel
-
 
 class TeacherProfileBase(BaseModel):
     qualification: Optional[str] = Field(None, max_length=300)
-    department: Optional[str] = Field(None,max_length=200)
-    office_number: Optional[str] = Field(None,max_length=30)
+    department: Optional[str] = Field(None, max_length=200)
+    office_number: Optional[str] = Field(None, max_length=30)
     bio: Optional[str] = None
 
 class TeacherProfileCreate(TeacherProfileBase):
@@ -25,17 +21,40 @@ class TeacherProfileResponse(TeacherProfileBase):
     class Config:
         from_attributes = True
 
+
 class TeacherBase(BaseModel):
-    name: str = Field(..., min_lengthh=3, max_length=255)
+    name: str = Field(..., min_length=3, max_length=255)   # fixed typo
     email: str
 
 class TeacherCreate(TeacherBase):
-    profile: Optional[TeacherProfileCreate] =None
+    profile: Optional[TeacherProfileCreate] = None
 
-class TeacherResponse(TeacherBase):
-    id:int
+class CoursesBase(BaseModel):
+    name: str = Field(..., max_length=300)
+    code: str = Field(..., max_length=50)
+    description: Optional[str] = None
+    credit: Optional[int] = Field(default=5, ge=1, le=10)
+    is_active: Optional[bool] = True
+
+class CoursesCreate(CoursesBase):
+    teacher_id: int = Field(..., gt=0)
+
+class CoursesUpdate(CoursesBase):
+    pass
+
+class CoursesResponse(CoursesBase):
+    id: int
+    teacher_id: int
     created_at: datetime
-    profile: Optional[TeacherProfileResponse] =None
 
     class Config:
-        from_attributes =True
+        from_attributes = True
+
+class TeacherResponse(TeacherBase):
+    id: int
+    created_at: datetime
+    profile: Optional[TeacherProfileResponse] = None
+    courses : List[CoursesResponse]=[]
+
+    class Config:
+        from_attributes = True
