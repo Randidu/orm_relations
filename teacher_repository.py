@@ -1,9 +1,7 @@
 from typing import Any, Coroutine, Sequence
-
 from sqlalchemy import select, Row, RowMapping
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload, joinedload
-
 from db_models import TeacherProfile, Teacher
 from response_models import TeacherCreate
 
