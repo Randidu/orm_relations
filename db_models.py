@@ -1,12 +1,17 @@
 from datetime import datetime
-from tkinter.constants import CASCADE
 from typing import Optional, List
-from sqlalchemy import String, Text, ForeignKey, func, Integer, Boolean
+from sqlalchemy import String, Text, ForeignKey, func, Integer, Boolean, Table, Column
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
     pass
+
+enrollment = Table(
+     "enrollments",Base.metadata,
+    Column("student_id",Integer,ForeignKey("students.id",ondelete="CASCADE"),primary_key=True),
+    Column("course_id",Integer,ForeignKey("courses.id",ondelete="CASCADE"),primary_key=True)
+ )
 
 class Teacher(Base):
     __tablename__ = "teachers"
@@ -43,6 +48,7 @@ class Courses(Base):
     created_at: Mapped[datetime] = mapped_column(server_default=func.now(), default=datetime.now)
 
     teacher: Mapped["Teacher"] = relationship(back_populates="courses")
+    students:Mapped[List["students"]] =relationship(secondary=enrollment,back_populates="courses",lazy="selectin")
 
 class TeacherProfile(Base):
     __tablename__ = "teacher_profiles"
@@ -57,3 +63,16 @@ class TeacherProfile(Base):
     bio: Mapped[str] = mapped_column(Text)
 
     teacher: Mapped["Teacher"] = relationship(back_populates="profile")
+
+
+class Student(Base):
+    __table__ = "students"
+
+    id : Mapped[int]= mapped_column(primary_key=True,index=True)
+    name : Mapped[str]= mapped_column(String(255))
+    email : Mapped[str]= mapped_column(String(255))
+    enrollment_year : Mapped[int]
+
+    courses : Mapped[List["Courses"]] = relationship(secondary=enrollment,back_populates="students",lazy="selectin")
+
+

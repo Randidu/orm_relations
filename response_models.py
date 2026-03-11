@@ -30,6 +30,7 @@ class TeacherCreate(TeacherBase):
     profile: Optional[TeacherProfileCreate] = None
 
 class CoursesBase(BaseModel):
+    teacher_id: int = Field(..., gt=0)
     name: str = Field(..., max_length=300)
     code: str = Field(..., max_length=50)
     description: Optional[str] = None
@@ -37,7 +38,7 @@ class CoursesBase(BaseModel):
     is_active: Optional[bool] = True
 
 class CoursesCreate(CoursesBase):
-    teacher_id: int = Field(..., gt=0)
+    student_ids: List[int] = []
 
 class CoursesUpdate(CoursesBase):
     pass
@@ -56,5 +57,18 @@ class TeacherResponse(TeacherBase):
     profile: Optional[TeacherProfileResponse] = None
     courses : List[CoursesResponse]=[]
 
+    class Config:
+        from_attributes = True
+
+class StudentBase(BaseModel):
+    name :str = Field(...,max_length=255,min_length=3)
+    email : str
+    enrollment_year : int = Field(ge=2000 , lt=2100)
+
+class StudentCreate(StudentBase):
+    pass
+
+class StudentResponse(StudentBase):
+    id : int
     class Config:
         from_attributes = True

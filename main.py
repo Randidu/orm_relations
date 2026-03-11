@@ -7,3 +7,4 @@ app = FastAPI(
 
 
 app.include_router(teacher_routes)
+app.include_router()
